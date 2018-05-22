@@ -12,7 +12,7 @@ TODO:
 
 */
 
-#define PJR_VER "0.0"
+#define PJR_VER "0.1"
 
 #include <stdio.h>
 #include <stdlib.h>
