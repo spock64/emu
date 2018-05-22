@@ -38,28 +38,11 @@ void error_exit(int e, int r)
   exit(e);
 }
 
-int main(
-  int argc,
-  char *argv[]
-)
+void load_file(char * path)
 {
-
-  printf("*** Emu (%s) v" PJR_VER " " __DATE__ " " __TIME__ " ***\n", argv[0]);
-
-  // TODO: properly scan arguments - SJR learning
-  //  use argv[1] as file path
-
-  if(argc < 2)
-  {
-    usage();
-    error_exit(e_NOSRC,0);
-  }
-
-  // TODO: Should the file name argument be validated ?
-
   FILE *src;
 
-  if((src = fopen(argv[1],"rb")) == NULL)
+  if((src = fopen(path,"rb")) == NULL)
     error_exit(e_CANTOPEN, errno);
 
   if(fseek(src, 0, SEEK_END) == -1)
@@ -81,6 +64,27 @@ int main(
 
   if(fclose(src) == -1)
     error_exit(e_CANTCLOSE, errno);
+}
+
+int main(
+  int argc,
+  char *argv[]
+)
+{
+
+  printf("*** Emu (%s) v" PJR_VER " " __DATE__ " " __TIME__ " ***\n", argv[0]);
+
+  // TODO: properly scan arguments - SJR learning
+  //  use argv[1] as file path
+
+  if(argc < 2)
+  {
+    usage();
+    error_exit(e_NOSRC,0);
+  }
+
+  // TODO: Should the file name argument be validated ?
+  load_file(argv[1]);
 
   printf("Source file '%s' loaded, emulation starts ...\n", argv[1]);
 

@@ -52,6 +52,6 @@ typedef unsigned char _mem[MEMSIZE];
 
 typedef struct _cpu_state
       {
-        char EQ:1;
-        char GT:1;
+        unsigned char EQ:1;
+        unsigned char GT:1;
       } cpu_state;

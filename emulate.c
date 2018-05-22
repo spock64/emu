@@ -24,25 +24,22 @@ cpu_state FLAGS = {0,0}; // State flags
 void print_state()
 {
   // regs
-  printf("\nRegs: ");
+  printf("\n@ R: ");
   int i;
   for(i=0;i<NUMREG;i++)
     printf("%c %0.2X ", r_name[i], r[i]);
 
   // internals
-  printf("\nPC: %0.4X EQ:%d GT:%d\n", PC, FLAGS.EQ, FLAGS.GT);
+  printf("\n@ PC: %0.4X EQ:%d GT:%d\n", PC, FLAGS.EQ, FLAGS.GT);
 }
 
 void emulate()
 {
 
   printf( "@ Emulation starts\n"
-          "Memory size %d\n", MEMSIZE);
-
-  // Start at 0 ...
+          "@ Memory size %d\n", MEMSIZE);
 
   do {
-    printf("%0.4X %0.2X\n", PC, mem[PC]);
     printf("%0.4X ", PC);
 
     unless(mem[PC] == HALT)
@@ -50,7 +47,7 @@ void emulate()
       switch(mem[PC] & 0xF0)
       {
         case LD_REG:
-          printf("LD %c, %c", r_name[(mem[PC] & 0x0C) >> 2], r_name[mem[PC] & 0x03]);
+          printf("LD %c,%c", r_name[(mem[PC] & 0x0C) >> 2], r_name[mem[PC] & 0x03]);
           r[(mem[PC] & 0x0C) >> 2] = r[mem[PC] & 0x03];
           ++PC;
           break;
@@ -90,25 +87,22 @@ void emulate()
           printf("SUB %c,%c,%c", r_name[mem[PC+1] & 0x03], r_name[(mem[PC] & 0x0C) >>2], r_name[mem[PC] & 0x03]);
           r[mem[PC+1] & 0x03] = r[(mem[PC] & 0x0C) >>2] - r[mem[PC] & 0x03];
           PC +=2;
-          PC++;
           break;
 
         case MUL:
           printf("MUL %c,%c,%c", r_name[mem[PC+1] & 0x03], r_name[(mem[PC] & 0x0C) >>2], r_name[mem[PC] & 0x03]);
           r[mem[PC+1] & 0x03] = r[(mem[PC] & 0x0C) >>2] * r[mem[PC] & 0x03];
           PC +=2;
-          PC++;
           break;
 
         case DIV:
           printf("DIV %c,%c,%c", r_name[mem[PC+1] & 0x03], r_name[(mem[PC] & 0x0C) >>2], r_name[mem[PC] & 0x03]);
           r[mem[PC+1] & 0x03] = r[(mem[PC] & 0x0C) >>2] / r[mem[PC] & 0x03];
           PC +=2;
-          PC++;
           break;
 
         case CMP:
-          printf("CMP %c, %c", r_name[(mem[PC] & 0x0C) >> 2], r_name[mem[PC] & 0x03]);
+          printf("CMP %c,%c", r_name[(mem[PC] & 0x0C) >> 2], r_name[mem[PC] & 0x03]);
           FLAGS.EQ = r[(mem[PC] & 0x0C) >> 2] == r[mem[PC] & 0x03];
           FLAGS.GT = r[(mem[PC] & 0x0C) >> 2] > r[mem[PC] & 0x03];
           PC++;
@@ -171,9 +165,9 @@ void emulate()
 
         case ROT: // NEEEDS WORK ****** Could be wrong !
           printf("ROT %c,%.1X", (mem[PC] & 0x08)? 'R' : 'L', mem[PC] & 07);
-          unsigned char tmp = r[0];
           if(mem[PC] & 0x07)
           {
+            unsigned char tmp = r[0];
             if(mem[PC] & 0x08)
             {
               // Right
@@ -191,26 +185,26 @@ void emulate()
           break;
 
         case AND:
-          printf("AND %c, %c", r_name[(mem[PC] & 0x0C) >> 2], r_name[mem[PC] & 0x03]);
+          printf("AND %c,%c", r_name[(mem[PC] & 0x0C) >> 2], r_name[mem[PC] & 0x03]);
           r[(mem[PC] & 0x0C) >> 2] &= r[mem[PC] & 0x03];
           PC++;
           break;
 
         case OR:
           printf("OR");
-          printf("LD %c, %c", r_name[(mem[PC] & 0x0C) >> 2], r_name[mem[PC] & 0x03]);
+          printf("LD %c,%c", r_name[(mem[PC] & 0x0C) >> 2], r_name[mem[PC] & 0x03]);
           r[(mem[PC] & 0x0C) >> 2] |= r[mem[PC] & 0x03];
           PC++;
           break;
 
         case XOR:
-          printf("XOR %c, %c", r_name[(mem[PC] & 0x0C) >> 2], r_name[mem[PC] & 0x03]);
+          printf("XOR %c,%c", r_name[(mem[PC] & 0x0C) >> 2], r_name[mem[PC] & 0x03]);
           r[(mem[PC] & 0x0C) >> 2] ^= r[mem[PC] & 0x03];
           PC++;
           break;
 
         default:
-          printf("Unknown instruction %.02X\n", mem[PC]);
+          printf("@ Unknown instruction %.02X\n", mem[PC]);
           return;
       }
 
